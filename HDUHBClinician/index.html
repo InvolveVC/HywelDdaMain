@@ -1,0 +1,439 @@
+<html lang="en">
+<head>
+<link rel="icon" href="logo.png">
+<link rel="shortcut icon" href="logo.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Clinician Troubleshooting Guide</title>
+<meta name="google" content="notranslate">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{ --brand:#212529; --pink:#325083; --bg:#E8EDEE; --card:#fff; }
+
+.pink-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: var(--pink);
+}
+body{
+  margin:0;
+  background-image: url(https://customer-0driaeelf9oznadghoes.s3.eu-west-2.amazonaws.com/site-customization/image/1782909186_1779116967_Background_6%20%282%29.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family:'Poppins',sans-serif;
+  color:var(--brand);
+  padding:32px 0;
+}
+.card{
+  position:relative;
+  width:70%;
+  max-width:860px;
+  min-height:70vh;
+  background:#fff;
+  border-radius:20px;
+  padding:50px 32px 80px;
+  box-shadow:0 10px 32px rgba(8,10,82,0.10);
+  margin:0 auto;
+}
+.card.question{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+  .card.answer {
+  display: flex;
+  align-items: center;
+}
+
+.card.dynamic{
+  height:auto;
+  padding:84px 50px 120px;
+}
+.content{
+  max-width:740px;
+  margin:0 auto;
+  text-align:center;
+}
+
+.answer .content{
+  text-align:left;
+  font-size:1.12rem;
+  line-height:1.72;
+}
+
+.answer-text{
+  max-width:740px;
+  margin:0 auto;
+  text-align:left;
+}
+
+h1{
+  font-size:1.74rem;
+  margin:0 0 18px;
+  font-weight:600;
+}
+
+.btns{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-top:50px;
+}
+
+.btn{
+  background:var(--pink);
+  color:#fff;
+  border:none;
+  padding:12px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:1rem;
+  min-width:140px;
+}
+
+.logo-top{
+  position:absolute;
+  top:20px;
+  right:20px;
+  max-width:290px;
+}
+
+.footer-icons{
+  position:absolute;
+  bottom:20px;
+  right:20px;
+  display:flex;
+  gap:20px;
+}
+
+.icon-btn{
+  background:none;
+  border:none;
+  font-size:1.7rem;
+  cursor:pointer;
+  color:var(--brand);
+}
+
+a{
+  color:var(--pink);
+  text-decoration:underline;
+}
+
+.note-small{
+  color:var(--pink);
+  font-size:1.1rem;
+  font-weight:400;
+  display:block;
+  margin-top:6px;
+}
+
+.lang-switcher{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  display:flex;
+  align-items:center;
+  background:#fff;
+  padding:4px;
+  border-radius:999px;
+  box-shadow:0 4px 12px rgba(8,10,82,0.08);
+  font-size:0.85rem;
+  z-index:5;
+  gap:2px;
+}
+
+.lang-pill{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-family:'Poppins',sans-serif;
+  font-size:0.85rem;
+  padding:4px 10px;
+  border-radius:999px;
+}
+
+.lang-pill .lang-code{
+  font-weight:600;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#F3F4FD;
+}
+
+.lang-pill.lang-active{
+  background:#CFAB7A;
+  color:#fff;
+}
+
+.lang-pill.lang-active .lang-code{
+  background:rgba(255,255,255,0.16);
+  color:#fff;
+}
+
+.card.answer .answer-text {
+  padding-top: 28px;
+}
+
+.card.dynamic.answer .answer-text {
+  padding-top: 40px;
+}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="lang-switcher" role="radiogroup" aria-label="Language">
+    <button class="lang-pill lang-active" id="lang-en" type="button" role="radio" aria-checked="true"><span class="lang-code">GB</span><span class="lang-name">English</span></button>
+    <button class="lang-pill" id="lang-cy" type="button" role="radio" aria-checked="false"><span class="lang-code">CY</span><span class="lang-name">Welsh (Cymraeg)</span></button>
+  </div>
+  <img src="https://d39o3fosqm9uio.cloudfront.net/accounts/165/files/3DQJD6X4BV903R6R2SE8WJJPG7/previews/huge.jpg?v=63855566070" class="logo-top" alt="SQOD Logo">
+  <div class="content" id="content"></div>
+  <div class="footer-icons">
+    <button class="icon-btn" title="Back" onclick="goBack()">&#8592;</button>
+    <button class="icon-btn" title="Restart" onclick="resetGuide()">&#8634;</button>
+  </div>
+</div>
+<script>
+let currentLang='en';
+let history=[];
+let current=null;
+const SLIDES={
+"W1":{type:"q",textEn:`Welcome to your interactive troubleshooting guide for Administrators and Clinicians.<br><span class="note-small">Please click below to continue.</span>`,textCy:`Croeso i'ch canllaw datrys problemau rhyngweithiol ar gyfer Gweinyddwyr a Chlinigwyr.<br><span class="note-small">Cliciwch isod i barhau.</span>`
+,buttons:[{label:"Continue",labelCy:"Parhau",next:"W2"}]},
+
+"W2":{type:"q",textEn:`Who is experiencing the issue?`,textCy:`Pwy sy'n profi'r broblem?`,buttons:[{label:"Me",labelCy:"Fi",next:"C1"},{label:"The patient",labelCy:"Y claf",next:"P1"}]},
+
+"P1":{type:"q",textEn:`Has the patient successfully joined the video consultation?`,textCy:`A yw'r claf wedi ymuno'n llwyddiannus â'r ymgynghoriad fideo?`,buttons:[{label:"Yes",labelCy:"Ie",next:"P2"},{label:"No",labelCy:"Na",next:"P1AA"}]},
+
+"P1A":{type:"q",textEn:`Is the patient showing as "Waiting to be seen" on your dashboard?`,textCy:`A yw'r claf yn ymddangos fel "Yn aros i gael ei weld" ar eich dangosfwrdd SQOD?`,buttons:[{label:"Yes",labelCy:"Ie",next:"P1AA"},{label:"No",labelCy:"Na",next:"P1AAAA"}]},
+
+"P1AA":{type:"q",textEn:`Has the patient advised they have joined the consultation, but they cannot see you within the call?`,textCy:`A yw'r claf wedi rhoi gwybod iddo ymuno â'r ymgynghoriad, ond na all eich gweld o fewn yr alwad?`,buttons:[{label:"Yes",labelCy:"Ie",next:"P1AAA"},{label:"No",labelCy:"Na",next:"PA1"}]},
+
+"P1AAA":{type:"a",textEn:`With all Hywel Dda video consultations, you as the service provider will enter the call <b>before</b> your patient proceeds. If your patient has advised that they have joined a consultation, but they cannot see anyone else as attending, there may be an issue with the invite link used or connection to the platform.<br><br>To resolve this, please place the call on hold by selecting "Leave Room" then re-start the call. This should re-trigger the patient's connection attempt.<br><br>If this does not work, please ask your patient to attempt re-joining via their <b>original invite link</b>, or alternatively you can reshare the link in-platform by pressing the "Invite" icon on the desired waiting room.`,textCy:`Gyda phob ymgynghoriad fideo Hywel Dda, byddwch chi fel darparwr y gwasanaeth yn ymuno â'r alwad <b>cyn</b> i'r claf symud ymlaen. Os yw'r claf wedi rhoi gwybod ei fod wedi ymuno â'r ymgynghoriad ond na all weld unrhyw un arall yn bresennol, efallai bod problem gyda'r ddolen wahoddiad a ddefnyddiwyd, neu gyda'r cysylltiad â'r platfform.<br><br>I ddatrys hyn, rhowch yr alwad ar wyliadwriaeth drwy ddewis "Leave Room", ac yna ailgychwyn yr alwad. Dylai hyn ail-danio ymgais y claf i gysylltu.<br><br>Os nad yw hyn yn gweithio, gofynnwch i'r claf geisio ail-ymuno drwy ei <b>ddolen wahoddiad wreiddiol</b>, neu fel arall gallwch ailrannu'r ddolen o fewn y platfform drwy bwyso'r eicon "Invite" ar yr ystafell aros neu'r alwad wedi'i threfnu berthnasol.`},
+
+"P1AAAA":{type:"a",textEn:`If your patient is not showing as "Waiting to be seen", then they have not finished the joining process to attend their consultation.<br><br><b>Please advise them of the following steps:</b><br>1. The first webpage will display the appointment or waiting room details, select "<b>Continue</b>"<br>2. The patient confirms or enters their personal details, then select "Continue"<br>3. The final page will allow the patient the option to change their details, or select "<b>Join</b>" to proceed to wait to be seen.<br><br>Alternatively, visual aids of the patient joining process are available on the Support Centre, <a href="https://resources.sqod.co.uk/article/134-new-joining-your-video-consultation" target="_blank" rel="noopener">here.</a>`,textCy:`Os nad yw'r claf yn ymddangos fel "Yn aros i gael ei weld", nid yw wedi cwblhau'r broses ymuno er mwyn mynychu ei ymgynghoriad.<br><br><b>Rhowch wybod iddo am y camau canlynol:</b><br>1. Bydd y dudalen we gyntaf yn dangos manylion yr apwyntiad neu'r ystafell aros — dewiswch "<b>Parhau</b>"<br>2. Mae'r claf yn cadarnhau neu'n nodi ei fanylion personol, ac yna'n dewis "Parhau"<br>3. Bydd y dudalen olaf yn rhoi'r dewis i'r claf newid ei fanylion, neu ddewis "<b>Ymuno</b>" er mwyn symud ymlaen i aros i gael ei weld.<br><br>Fel arall, mae cymhorthion gweledol ar gyfer proses ymuno'r claf ar gael yng Nghanolfan Gymorth SQOD, <a href="https://resources.sqod.co.uk/article/134-new-joining-your-video-consultation" target="_blank" rel="noopener">yma.</a>`},
+
+"PA1":{type:"a",textEn:`If your patient is unable to successfully enter the consultation please try the following steps:<br><br>1. <b>Re-send or confirm the consultation link:</b> If they are not using the correct link or are unable to access it, you can re-send it via the in-platform messaging or by copying and sharing the link.<br>2. <b>Ask if they have confirmed their details:</b> When joining a consultation, the patient will have the opportunity to review their details before proceeding to wait to be seen. It is important that the patient clicks "Confirm details" as they will not progress to the next page without doing so. Please be advised they may need to scroll down on their device to access the button.<br>3. <b>Check their device permissions</b>: When you start the consultation, the patient will progress to the next page and will be prompted to accept microphone and camera permissions. Once they've done so, they will have to choose to skip or run device tests before proceeding into the consultation. If a patient successfully accessed the Waiting Room but didn't progress through once you started the consultation, this would be the likely reason. Please ask the patient to scroll on their page and confirm there are no buttons to press or outstanding actions.<br><br>If your patient is still experiencing issues, please advise them to attempt re-joining on another device or method of internet access, or advise that they complete your self-service troubleshooter for patients available <a href="https://support.sqod.co.uk/HywelDdaPatient/" target="_blank" rel="noopener">here</a>.`,textCy:`Os nad yw eich claf yn gallu mynd i mewn i'r ymgynghoriad yn llwyddiannus, rhowch gynnig ar y camau canlynol:<br><br>1. <b>Ail-anfon neu gadarnhau'r ddolen ymgynghori:</b> Os nad yw'n defnyddio'r ddolen gywir, neu os na all gael mynediad ati, gallwch ei hail-anfon drwy system negeseuon y platfform, neu drwy gopïo'r ddolen a'i rhannu.<br>2. <b>Gofynnwch a yw'r claf wedi cadarnhau ei fanylion:</b> Wrth ymuno â'r ymgynghoriad, bydd gan y claf gyfle i adolygu ei fanylion cyn symud ymlaen i aros i gael ei weld. Mae'n bwysig bod y claf yn clicio "Cadarnhau manylion", oherwydd ni fydd yn gallu symud ymlaen i'r dudalen nesaf heb wneud hynny. Sylwer y gallai fod angen iddo sgrolio i lawr ar ei ddyfais er mwyn cyrraedd y botwm.<br>3. <b>Gwiriwch ganiatadau ei ddyfais:</b> Pan fyddwch chi'n cychwyn yr ymgynghoriad, bydd y claf yn symud ymlaen i'r dudalen nesaf ac yn cael cais i ganiatáu mynediad i'r meicroffon a'r camera. Wedi gwneud hynny, bydd angen iddo ddewis naill ai hepgor neu gynnal profion dyfais cyn mynd ymlaen i'r ymgynghoriad. Os llwyddodd y claf i gyrraedd yr Ystafell Aros neu'r Alwad Wedi'i Threfnu ond heb symud ymlaen wedi i chi gychwyn yr ymgynghoriad, dyma'r rheswm mwyaf tebygol. Gofynnwch i'r claf sgrolio ar ei dudalen a chadarnhau nad oes unrhyw fotymau i'w pwyso na chamau sy'n aros i'w cwblhau.<br><br>Os yw eich claf yn dal i brofi anawsterau, cynghorwch ef i geisio ail-ymuno ar ddyfais arall neu drwy ddull arall o gael mynediad i'r rhyngrwyd, neu i gwblhau ein teclyn datrys problemau hunanwasanaeth i gleifion sydd ar gael <a href="https://support.sqod.co.uk/HywelDdaPatient/" target="_blank" rel="noopener">yma</a>.`},
+
+"P2":{type:"q",textEn:`Is their issue camera or microphone related?`,textCy:`A yw eu problem yn ymwneud â'r camera neu'r meicroffon?`,buttons:[{label:"Yes",labelCy:"Ie",next:"P3"},{label:"No",labelCy:"Na",next:"P4"}]},
+
+"P3":{type:"q",textEn:`Is the issue with their own camera and microphone, or yours?`,textCy:`A yw'r broblem gyda'u camera a'u meicroffon nhw, neu gyda'ch rhai chi?`,buttons:[{label:"Their own",labelCy:"Eu rhai nhw",next:"PA3"},{label:"Mine",labelCy:"Fy rhai i",next:"PA2"}]},
+
+"PA2":{type:"a",textEn:`If your patient is experiencing issues with your visual and audio feed, such as it lagging or buffering, it may be that your internet connection is unstable or poor. You can check your internet connection in-platform via the <b>Meeting Diagnostics</b>, signified by 3 bars in the top right corner of the consultation window, or by using an internet speed tester such as <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>.<br><br>If you are unable to change your internet connection, you can toggle on "<b>Low Data Mode</b>" within the consultation via the settings cog in the top right corner of the call window. This reduces the strain on your internet connection, helping to alleviate bandwidth issues.`,textCy:`Os yw eich claf yn profi anawsterau gyda'ch llif fideo a sain chi, er enghraifft oedi neu darfu, efallai bod eich cysylltiad rhyngrwyd yn ansefydlog neu'n annigonol. Gallwch wirio eich cysylltiad rhyngrwyd o fewn y platfform drwy'r <b>Meeting Diagnostics</b> — a ddangosir gan 3 bar yng nghornel dde uchaf ffenestr yr ymgynghoriad — neu drwy ddefnyddio gwefan profi cyflymder rhyngrwyd fel <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>.<br><br>Os nad oes modd i chi newid eich cysylltiad rhyngrwyd, gallwch alluogi "<b>Modd Data Isel</b>" yn ystod yr ymgynghoriad drwy'r eicon gosodiadau (gêr) yng nghornel dde uchaf ffenestr yr alwad. Mae hyn yn lleihau'r pwysau ar eich cysylltiad rhyngrwyd, gan helpu i leddfu problemau lled band.`},
+
+"PA3":{type:"a",textEn:`If your patient is experiencing issues with their camera and microphone, first confirm whether they accepted their device permissions when the call started. If they have already done so, there's a number of solutions you can advise:<br><br>1. <b>Confirm the camera and microphone are not muted:</b> If a patient has their device muted or turned off, it will be signified on your call screen by orange mute icons next to their name. Kindly request that the patient un-mute their microphone and camera by clicking the respective device icons at the bottom of their call window.<br>2. <b>Close all other applications and tabs:</b> If the camera/microphone were previously being used by another application, closing all open windows and refreshing the browser can help to reset the device permissions.<br>3. <b>Check the internet connection:</b> If there are persistent issues with audio and camera quality, insufficient internet speed may be the issue. The patient can check their internet connection in-platform via the <b>Meeting Diagnostics</b>, signified by 3 bars in the top right corner of the consultation window, or by using an internet speed tester such as <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>. If the internet speed is insufficient or poor, please advise that they switch to an alternative network.<br>4. <b>Re-join the consultation:</b> If the above steps do not work, advise the patient to restart their device and re-join their consultation via the original <b>invite</b> link.<br><br>If the patient is still experiencing issues, please advise them to attempt re-joining on another device or clearing their browser cache. We have a step-by-step guide on how to do this <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">here</a>.`,textCy:`Os yw eich claf yn profi anawsterau gyda'i gamera a'i feicroffon, cadarnhewch yn gyntaf a wnaeth dderbyn caniatadau'r ddyfais pan gychwynnwyd yr alwad. Os yw eisoes wedi gwneud hynny, dyma nifer o atebion y gallwch eu hawgrymu:<br><br>1. <b>Cadarnhewch nad yw'r camera na'r meicroffon wedi'u tewi:</b> Os yw claf wedi tewi ei ddyfais neu ei diffodd, bydd hyn yn cael ei nodi ar eich sgrin alwad gan eiconau tewi lliw oren wrth ymyl ei enw. Gofynnwch yn gwrtais i'r claf dad-dewi ei feicroffon a'i gamera drwy glicio'r eiconau dyfais perthnasol ar waelod ffenestr ei alwad.<br>2. <b>Caewch yr holl raglenni a thabiau eraill:</b> Os oedd y camera neu'r meicroffon yn cael eu defnyddio gan raglen arall yn flaenorol, gall cau'r holl ffenestri agored ac adnewyddu'r porwr helpu i ailosod caniatadau'r ddyfais.<br>3. <b>Gwiriwch y cysylltiad rhyngrwyd:</b> Os oes anawsterau parhaus gydag ansawdd sain neu gamera, efallai mai cyflymder rhyngrwyd annigonol yw'r achos. Gall y claf wirio ei gysylltiad rhyngrwyd o fewn y platfform drwy'r <b>Meeting Diagnostics</b> — a ddangosir gan 3 bar yng nghornel dde uchaf ffenestr yr ymgynghoriad — neu drwy ddefnyddio gwefan profi cyflymder fel <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>. Os yw'r cyflymder rhyngrwyd yn annigonol neu'n wan, cynghorwch y claf i newid i rwydwaith arall.<br>4. <b>Ail-ymuno â'r ymgynghoriad:</b> Os nad yw'r camau uchod yn gweithio, cynghorwch y claf i ailgychwyn ei ddyfais ac ail-ymuno â'r ymgynghoriad drwy'r ddolen <b>wahoddiad</b> wreiddiol.<br><br>Os yw'r claf yn dal i brofi anawsterau, cynghorwch ef i geisio ail-ymuno ar ddyfais arall, neu i glirio storfa ei borwr. Mae gennym ganllaw cam wrth gam ar sut i wneud hyn <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">yma</a>.`},
+
+"P4":{type:"a",textEn:`If your patient has successfully joined the consultation and their issue is not audio-visual related, please advise that they complete our self-service troubleshooting for patients available <a href="https://support.sqod.co.uk/HywelDdaPatient/" target="_blank" rel="noopener">here</a>.<br><br>Alternatively, if your patient is experiencing an issue not covered in this guide or our resource centre, please contact us at <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>, and our technical support team would be happy to assist you.`,textCy:`Os yw eich claf wedi ymuno'n llwyddiannus â'r ymgynghoriad ac nad yw ei broblem yn ymwneud â sain na fideo, cynghorwch ef i gwblhau ein teclyn datrys problemau hunanwasanaeth i gleifion sydd ar gael <a href="https://support.sqod.co.uk/HywelDdaPatient/" target="_blank" rel="noopener">yma</a>.<br><br>Fel arall, os yw eich claf yn profi problem nad yw wedi'i thrin yn y canllaw hwn nac yn ein canolfan adnoddau, cysylltwch â ni yn <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>, a bydd ein tîm cymorth technegol yn falch o'ch cynorthwyo.`},
+
+"C1":{type:"q",textEn:`Please select the topic that most closely matches your query.`,textCy:`Dewiswch y pwnc sy'n cyfateb agosaf i'ch ymholiad.`,buttons:[{label:"Admin actions",labelCy:"Gweithredoedd gweinyddol",next:"C3"},{label:"Live calls",labelCy:"Galwadau byw",next:"C4"},{label:"Logging in",labelCy:"Mewngofnodi",next:"C5"},{label:"Sharing invites",labelCy:"Rhannu gwahoddiadau",next:"C6"},{label:"Other",labelCy:"Arall",next:"C70"}]},
+
+"C70":{type:"q",textEn:`Please select the topic that most closely matches your query.`,textCy:`Dewiswch y pwnc sy'n cyfateb agosaf i'ch ymholiad.`,buttons:[{label:"Messaging",labelCy:"Negeseuon",next:"C72"},{label:"Scheduled calls",labelCy:"Galwadau wedi'u trefnu",next:"C73"},{label:"Technical issues",labelCy:"Problemau technegol",next:"C78"},{label:"Video backgrounds",labelCy:"Cefndiroedd fideo",next:"C74"},{label:"Waiting rooms",labelCy:"Ystafelloedd aros",next:"C75"},{label:"Other",labelCy:"Arall",next:"C7"}]},
+
+"C75":{type:"q",textEn:`Which waiting room function are you querying?`,textCy:`Pa swyddogaeth ystafell aros yr ydych yn ymholi amdani?`,buttons:[{label:"Arrival alerts",labelCy:"Rhybuddion cyrraedd",next:"C751"},{label:"Post-call redirection",labelCy:"Ailgyfeirio ar ôl galwad",next:"C752"},{label:"Hold music and videos",labelCy:"Cerddoriaeth a fideos ar-hold",next:"C753"}]},
+
+"C72":{type:"a",textEn:`With Hywel Dda Video Consultation, you can send in-platform messages directly to your patients as they wait. Messages are one-way, and you are able to view all previous messages sent that day.<br><br><b>Waiting rooms:</b> You can message the room as a group, for example to say the service is running 10 minutes behind, by selecting the "Message" icon on the waiting room tile. To message an individual patient, select "People in this room". From here you can select the "Message" icon next to the desired patient.<br><br>If you would like additional training please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Gydag Ymgynghoriad Fideo Hywel Dda, gallwch anfon negeseuon o fewn y platfform yn uniongyrchol at eich cleifion wrth iddynt aros. Mae'r negeseuon yn un-cyfeiriad, a gallwch weld pob neges flaenorol a anfonwyd y diwrnod hwnnw.<br><br><b>Ystafelloedd aros:</b> Gallwch anfon neges at yr ystafell gyfan fel grŵp — er enghraifft i roi gwybod bod y gwasanaeth 10 munud ar ei hôl hi — drwy ddewis yr eicon "Message" ar deilen yr ystafell aros. Er mwyn anfon neges at glaf unigol, dewiswch "People in this room". O'r fan hon gallwch ddewis yr eicon "Message" wrth ymyl y claf perthnasol.<br><br>Os hoffech hyfforddiant ychwanegol, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C73":{type:"a",textEn:`<b>Scheduled calls</b> allow you to create a fixed-time appointment for a future date. Unlike waiting rooms, the appointment link is a unique, one-time use web address.<br><br>The call diary is <b>shared</b> across your organisation or department, making it easy to view upcoming appointments or assist colleagues with their consultations.<br>To <b>reschedule</b> an appointment, select the "Edit" icon then update the date and time to the desired values. Once you save the appointment, your patient will automatically be sent an update. Similarly, if you <b>cancel</b> an appointment, your patient will also be updated via email.<br><br>Scheduled appointments are not a feature currently used by your Health Board, if you would like more information please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Mae <b>galwadau wedi'u trefnu</b> yn caniatáu i chi greu apwyntiad ar amser penodol ar gyfer dyddiad yn y dyfodol. Yn wahanol i ystafelloedd aros, mae dolen yr apwyntiad yn gyfeiriad gwe unigryw y gellir ei ddefnyddio unwaith yn unig.<br><br>Mae'r dyddiadur galwadau yn cael ei <b>rannu</b> ar draws eich sefydliad neu eich adran, gan ei gwneud yn hawdd gweld apwyntiadau sydd ar y gweill neu gynorthwyo cydweithwyr gyda'u hymgynghoriadau.<br>I <b>aildrefnu</b> apwyntiad, dewiswch yr eicon "Edit" ac yna diweddarwch y dyddiad a'r amser i'r gwerthoedd a ddymunir. Unwaith y byddwch wedi cadw'r apwyntiad, bydd eich claf yn derbyn diweddariad yn awtomatig. Yn yr un modd, os byddwch yn <b>canslo</b> apwyntiad, bydd eich claf hefyd yn cael diweddariad drwy e-bost.<br><br>Nid yw apwyntiadau wedi'u trefnu yn nodwedd a ddefnyddir gan eich Bwrdd Iechyd ar hyn o bryd. Os hoffech ragor o wybodaeth, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C74":{type:"a",textEn:`With Hywel Dda Video Consultation, you have the option to choose from a <b>selection of backgrounds</b> for your live consultation, or to <b>upload your own.</b><br><br>Your background settings can be updated during the live-call through hovering over the camera icon along the bottom toolbar, then selecting "Background settings" or via the settings cog in the top right corner.`,textCy:`Gydag Ymgynghoriad Fideo Hywel Dda, mae gennych yr opsiwn i ddewis o <b>ddewislen o gefndiroedd</b> ar gyfer eich ymgynghoriad byw, neu i <b>lwytho eich cefndir eich hun</b>.<br><br>Gellir diweddaru gosodiadau'r cefndir yn ystod yr alwad fyw drwy hofran dros eicon y camera ar y bar offer ar y gwaelod, ac yna dewis "Background settings", neu drwy'r eicon gosodiadau (gêr) yng nghornel dde uchaf y ffenestr.`},
+
+"C751":{type:"a",textEn:`When a patient has entered a waiting room, you will receive an <b>audio and visual alert</b> within your dashboard. By selecting the bell icon along the top navigation bar, you can also view previous patient notifications such as the name and arrival time.<br><br>If you are working on multiple systems, a useful feature is <b>caller arrival alerts.</b> After selecting the edit icon on the desired waiting room, you will have the option to enter a <b>mobile number</b> and the number of minutes after which you would like to be alerted. This will send a text message advising that a patient has arrived and is waiting to be seen.<br><br>This is particularly useful when using <b>softphone systems</b> such as Genesys, as the alert will appear as an incoming interaction.`,textCy:`Pan fydd claf wedi mynd i mewn i ystafell aros, byddwch yn derbyn <b>rhybudd sain a gweledol</b> o fewn eich dangosfwrdd. Drwy ddewis eicon y gloch ar y bar llywio ar y brig, gallwch hefyd weld hysbysiadau blaenorol am gleifion, megis enw'r claf a'r amser cyrraedd.<br><br>Os ydych yn gweithio ar sawl system, mae <b>rhybuddion cyrraedd galwyr</b> yn nodwedd ddefnyddiol. Ar ôl dewis yr eicon golygu ar yr ystafell aros berthnasol, bydd yr opsiwn gennych i nodi <b>rhif ffôn symudol</b> a nifer y munudau ar ôl hynny yr hoffech gael eich rhybuddio. Bydd hyn yn anfon neges destun yn hysbysu bod claf wedi cyrraedd ac yn aros i gael ei weld.<br><br>Mae hyn yn arbennig o ddefnyddiol wrth ddefnyddio <b>systemau ffôn meddalwedd</b> fel Genesys, gan y bydd y rhybudd yn ymddangos fel rhyngweithiad sy'n dod i mewn.`},
+
+"C752":{type:"a",textEn:`With Hywel Dda Video Consultations, you can set a custom webpage for your patients to be <b>automatically re-directed</b> to once their call ends.<br><br>To do so, select the edit icon on the desired waiting room then scroll down to the <b>"Re-directs"</b> section. From here you can enter the link to an external webpage to use as a custom post-call screen, and you have the ability to enter different links for Agents and Patients.<br><br>A popular use for this is to capture <b>post-call feedback</b> via a form or to share an informative video.`,textCy:`Gydag Ymgynghoriadau Fideo Hywel Dda, gallwch osod tudalen we bwrpasol y bydd eich cleifion yn cael eu <b>hailgyfeirio'n awtomatig</b> iddi unwaith y daw eu galwad i ben.<br><br>I wneud hyn, dewiswch yr eicon golygu ar yr ystafell aros berthnasol ac yna sgrolio i lawr i'r adran <b>"Re-directs"</b>. O'r fan hon gallwch nodi dolen i dudalen we allanol i'w defnyddio fel sgrin bwrpasol ar ôl galwad, a gallwch nodi dolenni gwahanol ar gyfer Asiantau a Chleifion.<br><br>Defnydd cyffredin ar gyfer hyn yw casglu <b>adborth ar ôl galwad</b> drwy ffurflen, neu rannu fideo gwybodaethol.`},
+
+"C7521":{type:"a",textEn:`With Hywel Dda Video Consultation, you can set a custom webpage for your patients to be <b>automatically re-directed</b> to once their call ends.<br><br><b>Waiting rooms: </b>Select the edit icon on the desired waiting room then scroll down to the "Re-directs" section.<br><br>From here you can enter the link to an external webpage to use as a custom post-call screen, and you have the option to enter different links for Agents and patients. A popular use for this is to capture <b>post-call feedback</b> via a form or to share an informative video.<br><br>If you have further queries regarding post-call redirects or would like additional training on your administrator privileges please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Gydag Ymgynghoriad Fideo Hywel Dda, gallwch osod tudalen we bwrpasol y bydd eich cleifion yn cael eu <b>hailgyfeirio'n awtomatig</b> iddi unwaith y daw eu galwad i ben.<br><br><b>Ystafelloedd aros: </b>Dewiswch yr eicon golygu ar yr ystafell aros berthnasol ac yna sgrolio i lawr i'r adran "Re-directs".<br><b>Apwyntiadau wedi'u trefnu: </b>Ar y tab priodol, dewiswch "Schedule a new call", ac yna sgrolio i lawr i'r adran "Redirects".<br><br>O'r fan hon gallwch nodi dolen i dudalen we allanol i'w defnyddio fel sgrin bwrpasol ar ôl galwad, ac mae gennych yr opsiwn i nodi dolenni gwahanol ar gyfer Asiantau a chleifion. Defnydd cyffredin ar gyfer hyn yw casglu <b>adborth ar ôl galwad</b> drwy ffurflen, neu rannu fideo gwybodaethol.<br><br>Os oes gennych ymholiadau pellach am ailgyfeiriadau ar ôl galwad, neu os hoffech hyfforddiant ychwanegol ar eich breintiau gweinyddol, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C753":{type:"a",textEn:`For the <b>best patient experience</b> when using the platform, we recommend adding hold music or an informative video to your waiting rooms.<br><br>This can be customised individually per waiting room by selecting the edit icon, then scroll down to the <b>"Theming"</b> tab along the bottom menu. From here you can enter the link to the desired files, and it will play automatically once the patient joins the waiting room.<br><b>Both</b> hold music and a video can be applied to a waiting room at the same time, and patients have the option to mute the music whilst they wait.<br><br>If you have further queries or would like additional training please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Er mwyn sicrhau'r <b>profiad gorau posibl i gleifion</b> wrth ddefnyddio'r platfform, rydym yn argymell ychwanegu cerddoriaeth ar-hold neu fideo gwybodaethol at eich ystafelloedd aros.<br><br>Gellir addasu hyn yn unigol ar gyfer pob ystafell aros drwy ddewis yr eicon golygu, ac yna sgrolio i lawr i'r tab <b>"Theming"</b> ar hyd y ddewislen ar y gwaelod. O'r fan hon gallwch nodi'r ddolen i'r ffeiliau a ddymunir, a byddant yn chwarae'n awtomatig unwaith y bydd y claf yn ymuno â'r ystafell aros.<br>Gellir cymhwyso'r <b>ddau</b> — cerddoriaeth ar-hold a fideo — i ystafell aros ar yr un pryd, ac mae gan gleifion yr opsiwn i dewi'r gerddoriaeth tra byddant yn aros.<br><br>Os oes gennych ymholiadau pellach neu os hoffech hyfforddiant ychwanegol, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C78":{type:"a",textEn:`If you encounter technical errors whilst using the platform, the issue likely to be <b>local to your device.</b><br>This can be easily resolved by doing a firm log out of the platform to clear your session data, or by clearing your cache. You can view our guide on how to do so, <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">here</a>.<br><br>Alternatively, if the issue appears to be platform-based or persists after clearing your cache, please contact your IT Helpdesk at <b><a href="helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b> and we will be happy to investigate.`,textCy:`Os dewch ar draws gwallau technegol wrth ddefnyddio'r platfform, mae'n debygol bod y broblem yn <b>lleol i'ch dyfais chi</b>.<br>Gellir datrys hyn yn rhwydd drwy allgofnodi'n llwyr o'r platfform er mwyn clirio data eich sesiwn, neu drwy glirio storfa eich porwr. Gallwch weld ein canllaw ar sut i wneud hyn <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">yma</a>.<br><br>Fel arall, os ymddengys bod y broblem yn ymwneud â'r platfform ei hun, neu os yw'n parhau ar ôl clirio'r storfa, cysylltwch â'ch <b>Tabl Cymorth TG</b> yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b> a byddwn yn falch o ymchwilio i'r mater.`},
+
+"C3":{type:"q",textEn:`Which administrator privilege are you querying?`,textCy:`Pa fraint weinyddol yr ydych yn ymholi amdani?`,buttons:[{label:"Audit logs",labelCy:"Logiau archwilio",next:"C30"},{label:"Transcription",labelCy:"Trawsgrifiadau",next:"C31"},{label:"Departments",labelCy:"Adrannau",next:"C32"},{label:"Licenses and permissions",labelCy:"Trwyddedau a chaniatadau",next:"C33"},{label:"Post-call redirection",labelCy:"Ailgyfeirio ar ôl galwad",next:"C7521"},{label:"Reporting",labelCy:"Adroddeg",next:"C34"},{label:"Site customisation",labelCy:"Addasu'r safle",next:"C35"}]},
+
+"C30":{type:"a",textEn:`As an administrator, you will be able to access activity logs via the admin portal. To access the portal, please select <b>"Switch to Admin"</b> at the top of the page when logged into your Hywel Dda Video Consultation account. Once on the portal, select "<b>Audit Logs</b>" under the menu on the left side of the page.<br><br>This will provide a list of recent activity in chronological order, you can filter the log by action type via the filter icon or view an action in more detail by selecting the eye icon.<br><br>If you have further queries regarding audit log data or would like additional training on your administrator privileges please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Fel gweinyddwr, byddwch yn gallu cael mynediad at logiau gweithgaredd drwy'r porth gweinyddol. I gael mynediad i'r porth, dewiswch <b>"Switch to Admin"</b> ar frig y dudalen pan fyddwch wedi mewngofnodi i'ch cyfrif Ymgynghoriad Fideo Hywel Dda. Unwaith ar y porth, dewiswch "<b>Audit Logs</b>" o dan y ddewislen ar ochr chwith y dudalen.<br><br>Bydd hyn yn darparu rhestr o weithgarwch diweddar mewn trefn gronolegol. Gallwch hidlo'r log yn ôl math o weithred drwy'r eicon hidlo, neu archwilio gweithred yn fanylach drwy ddewis yr eicon llygad.<br><br>Os oes gennych ymholiadau pellach am ddata logiau archwilio, neu os hoffech hyfforddiant ychwanegol ar eich breintiau gweinyddol, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C31":{type:"a",textEn:`<b>Consultation transcriptions</b> are automatically stored for 30 days before deletion, you can access previous transcriptions under the <b>"My files"</b> tab via the menu on the left. Alternatively, we have a step-by-step access guide, available <a href="https://resources.sqod.co.uk/article/162-new-how-to-guide-access-recordings" target="_blank" rel="noopener">here</a>.<br><br>If you have further queries regarding consultation transcriptions or would like additional training on your administrator privileges please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Mae <b>trawsgrifiadau ymgynghori</b> yn cael eu storio'n awtomatig am 30 diwrnod cyn cael eu dileu. Gallwch gael mynediad at drawsgrifiadau blaenorol o dan y tab <b>"My files"</b> drwy'r ddewislen ar y chwith. Fel arall, mae gennym ganllaw mynediad cam wrth gam ar gael <a href="https://resources.sqod.co.uk/article/162-new-how-to-guide-access-recordings" target="_blank" rel="noopener">yma</a>.<br><br>Os oes gennych ymholiadau pellach am drawsgrifiadau ymgynghoriadau, neu os hoffech hyfforddiant ychwanegol ar eich breintiau gweinyddol, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C32":{type:"a",textEn:`Should an organisation have multiple waiting rooms across a handful of business areas, Hywel Dda Video Consultation can offer <b>reporting</b> at business area/department level.<br><br>For example, 'Occupational Health North' may have a Lung function Test room, Mental Health room and New Starter Assessment room. Reports can be produced for that specific department and no others, and you can assign a Department Administrator to take responsibility for a specific Department.<br>For a detailed how-to guide regarding departments, please visit our resource available <a href="https://resources.sqod.co.uk/article/157-new-how-to-guide-department-administrator" target="_blank" rel="noopener">here</a>.<br><br>If you have further queries regarding Departments or would like additional training on your administrator privileges please contact our Customer Success team at <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`,textCy:`Os oes gan sefydliad sawl ystafell aros ar draws nifer o feysydd busnes, gall Ymgynghoriad Fideo Hywel Dda ddarparu <b>adroddeg</b> ar lefel maes busnes neu adran.<br><br>Er enghraifft, gallai 'Iechyd Galwedigaethol y Gogledd' fod â Siambr Prawf Swyddogaeth yr Ysgyfaint, Siambr Iechyd Meddwl a Siambr Asesiad Dechreuwr Newydd. Gellir llunio adroddiadau ar gyfer yr adran benodol honno yn unig, a gallwch neilltuo Gweinyddwr Adran i gymryd cyfrifoldeb am adran benodol.<br>I gael canllaw manwl ar adrannau, ewch i'n hadnodd ar gael <a href="https://resources.sqod.co.uk/article/157-new-how-to-guide-department-administrator" target="_blank" rel="noopener">yma</a>.<br><br>Os oes gennych ymholiadau pellach am Adrannau, neu os hoffech hyfforddiant ychwanegol ar eich breintiau gweinyddol, cysylltwch â'n Tîm Llwyddiant Cwsmeriaid yn <b><a href="mailto:customersuccess@sqod.co.uk">customersuccess@sqod.co.uk</a></b>.`},
+
+"C33":{type:"q",textEn:`Which topic most closely matches your query?`,textCy:`Pa bwnc sy'n cyfateb agosaf i'ch ymholiad?`,buttons:[{label:"New users",labelCy:"Defnyddwyr newydd",next:"C331"},{label:"Deleting users",labelCy:"Dileu defnyddwyr",next:"C332"},{label:"User permissions",labelCy:"Caniatadau defnyddwyr",next:"C333"}]},
+
+"C331":{type:"a",textEn:`To create a new user on the platform, open the <b>"Users"</b> tab from the menu on the left side of the admin portal. The admin portal can be accessed by selecting <b>"Switch to admin"</b> at the top of the page when logged into your account.<br><br>When on the Users tab, select the blue <b>"Create User"</b> button on the right then proceed to fill in the relevant details. Clicking create will generate a welcome email to be sent to the recipient, and will contain a <b>temporary password</b> that is valid for 7 days. You can resend this email by searching for their name on the Users tab, selecting the three dots on the right of their account, and then choosing "Resend Email Verification".<br><br>If you are unsure how many available licenses your organisation has, please contact an administrator.<br><br>Alternatively, if you are having technical difficulties with creating <b>new users</b>, please contact your IT Helpdesk at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`I greu defnyddiwr newydd ar y platfform, agorwch y tab <b>"Users"</b> o'r ddewislen ar ochr chwith y porth gweinyddol. Gellir cael mynediad i'r porth gweinyddol drwy ddewis <b>"Switch to admin"</b> ar frig y dudalen pan fyddwch wedi mewngofnodi i'ch cyfrif.<br><br>Ar y tab Users, dewiswch y botwm glas <b>"Create User"</b> ar y dde ac yna llenwch y manylion perthnasol. Bydd clicio create yn creu e-bost croeso i'w anfon at y derbynnydd, a bydd yn cynnwys <b>cyfrinair dros dro</b> sy'n ddilys am 7 diwrnod. Gallwch ail-anfon yr e-bost hwn drwy chwilio am eu henw ar y tab Users, dewis y tri dot ar ochr dde eu cyfrif, ac yna dewis "Resend Email Verification".<br><br>Os nad ydych yn sicr faint o drwyddedau sydd ar gael i'ch sefydliad, cysylltwch â gweinyddwr.<br><br>Fel arall, os ydych yn cael anawsterau technegol wrth greu <b>defnyddwyr newydd</b>, cysylltwch â'ch Tabl Cymorth TG yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C332":{type:"a",textEn:`To delete a user, open the <b>"Users"</b> tab from the menu on the left side of the admin portal. The admin portal can be accessed by selecting "Switch to admin" at the top of the page when logged into your account. When on the Users tab, you have the option to temporarily or permanently delete the user.<br><br><b>Temporarily:</b> Select the trashcan icon on the right side of the user. To restore the user at a later date, select the filter icon on the top right then filter to "Only deleted". From here, find the desired user then select the restore icon signified by two arrows.<br><b>Permanently:</b> Select the three dots on the right side of the user, then choose <b>"Fully Delete User"</b>. If you wish to re-add this user at a later date, you will have to do so as a new user from scratch.<br><br>If you are having technical difficulties with deleting and restoring users, please contact your IT Helpdesk at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`I ddileu defnyddiwr, agorwch y tab <b>"Users"</b> o'r ddewislen ar ochr chwith y porth gweinyddol. Gellir cael mynediad i'r porth gweinyddol drwy ddewis "Switch to admin" ar frig y dudalen pan fyddwch wedi mewngofnodi i'ch cyfrif. Ar y tab Users, mae gennych yr opsiwn i ddileu'r defnyddiwr dros dro neu'n barhaol.<br><br><b>Dros dro:</b> Dewiswch eicon y bin sbwriel ar ochr dde'r defnyddiwr. I adfer y defnyddiwr yn ddiweddarach, dewiswch yr eicon hidlo ar frig y dudalen i'r dde, ac yna hidlwch i "Only deleted". O'r fan hon, dewch o hyd i'r defnyddiwr perthnasol ac yna dewiswch yr eicon adfer, a ddangosir gan ddwy saeth.<br><b>Yn barhaol:</b> Dewiswch y tri dot ar ochr dde'r defnyddiwr, ac yna dewis <b>"Fully Delete User"</b>. Os dymunwch ail-ychwanegu'r defnyddiwr hwn yn ddiweddarach, bydd yn rhaid gwneud hynny fel defnyddiwr newydd o'r dechrau.<br><br>Os ydych yn cael anawsterau technegol wrth ddileu neu adfer defnyddwyr, cysylltwch â'ch <b>Tabl Cymorth TG</b> yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C333":{type:"a",textEn:`You can add, remove, or edit <b>user permissions</b> for each Waiting Room you have on Hywel Dda Video Consultation. To do so, select the pencil icon on the desired waiting room then scroll towards the bottom of the page and choose <b>"Permissions"</b> on the right. From here you will be able to manage additional user and department permissions.<br><br>If you are having technical difficulties with user permissions or Waiting Room access, please contact your IT Helpdesk at <b><a href="helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`Gallwch ychwanegu, dileu neu olygu <b>caniatadau defnyddwyr</b> ar gyfer pob Ystafell Aros sydd gennych ar Ymgynghoriad Fideo Hywel Dda. I wneud hyn, dewiswch eicon y pensil ar yr ystafell aros berthnasol, yna sgroliwch tuag at waelod y dudalen a dewiswch <b>"Permissions"</b> ar y dde. O'r fan hon byddwch yn gallu rheoli caniatadau ychwanegol i ddefnyddwyr ac adrannau.<br><br>Os ydych yn cael anawsterau technegol gyda chaniatadau defnyddwyr neu fynediad i'r Ystafell Aros, cysylltwch â'ch <b>Tabl Cymorth TG</b> yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C34":{type:"a",textEn:`<b>Platform reporting</b> can be accessed via the <b>"Reporting"</b> tab along the top navigation bar when logged into your account.<br><br>From here, you can toggle between Waiting Room data, as well as choosing different date ranges. The graphs and table will auto-populate with the selected data and is representative of your organisation as a whole unless filtered by department. The raw data for your selected period can be exported by selecting "<b>Export as .CSV</b>" on the left of the page, this will generate a zip file to your email address.<br><br>Alternatively, if you have more bespoke reporting requirements that you wish to discuss, please select <b>"Contact us"</b> at the bottom of the Reporting page.`,textCy:`Gellir cael mynediad at <b>adroddeg y platfform</b> drwy'r tab <b>"Reporting"</b> ar hyd y bar llywio ar y brig pan fyddwch wedi mewngofnodi i'ch cyfrif.<br><br>O'r fan hon, gallwch newid rhwng data Ystafelloedd Aros, yn ogystal â dewis ystodau dyddiad gwahanol. Bydd y graffiau a'r tabl yn llenwi'n awtomatig â'r data a ddewiswyd, ac maent yn cynrychioli eich sefydliad yn ei gyfanrwydd oni bai eich bod yn hidlo yn ôl adran. Gellir allforio'r data crai ar gyfer y cyfnod a ddewiswyd drwy ddewis "<b>Export as .CSV</b>" ar ochr chwith y dudalen — bydd hyn yn anfon ffeil zip i'ch cyfeiriad e-bost.<br><br>Fel arall, os oes gennych ofynion adroddeg mwy penodol yr hoffech eu trafod, dewiswch <b>"Contact us"</b> ar waelod y dudalen Reporting.`},
+
+"C35":{type:"a",textEn:`A benefit of using Hywel Dda Video Consultation, is that your service and website is <b>fully customisable!</b><br><br>For a detailed how-to guide on all the available customisation options, please visit our resource available here. To change <b>customisation settings</b> for an individual Waiting Room, you can do so by selecting the pencil icon on the desired waiting room then scrolling towards the bottom of the page and navigating through the available tabs.<br><br>Alternatively, if you are having technical difficulties with customising your site or would like assistance, please contact our Customer Support team at <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>.<br>We are here to help you get the most out of your service with Hywel Dda Video Consultation.`,textCy:`Un o fanteision defnyddio Ymgynghoriad Fideo Hywel Dda yw bod eich gwasanaeth a'ch gwefan yn <b>gwbl addasadwy!</b><br><br>I gael canllaw manwl ar yr holl opsiynau addasu sydd ar gael, ewch i'n hadnodd sydd ar gael yma. I newid <b>gosodiadau addasu</b> ar gyfer Ystafell Aros unigol, gallwch wneud hynny drwy ddewis eicon y pensil ar yr ystafell aros berthnasol, ac yna sgrolio tuag at waelod y dudalen a llywio drwy'r tabiau sydd ar gael.<br><br>Fel arall, os ydych yn cael anawsterau technegol wrth addasu eich safle, neu os hoffech gymorth, cysylltwch â'n Tîm Cymorth Cwsmeriaid yn <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>.<br>Rydym yma i'ch helpu i gael y gorau o'ch gwasanaeth gydag Ymgynghoriad Fideo Hywel Dda.`},
+
+"C4":{type:"q",textEn:`Which live call issue are you experiencing?`,textCy:`Pa broblem galwad fyw yr ydych yn ei phrofi?`,buttons:[{label:"Audio-visual problems",labelCy:"Problemau sain a fideo",next:"C2"},{label:"Patient connectivity",labelCy:"Cysylltedd y claf",next:"C412"},{label:"Group calls",labelCy:"Galwadau grŵp",next:"C42"}]},
+
+"C412":{type:"q",textEn:`Has the patient advised they have joined the consultation, but you cannot see them within the call?`,textCy:`A yw'r claf wedi rhoi gwybod ei fod wedi ymuno â'r ymgynghoriad, ond na allwch chi ei weld o fewn yr alwad?`,buttons:[{label:"Yes",labelCy:"Ie",next:"C413"},{label:"No",labelCy:"Na",next:"C41"}]},
+
+"C413":{type:"a",textEn:`With all Hywel Dda Video Consultations, you as the service provider will enter the call <b>before</b> your patient proceeds. If your patient has advised that they have joined a consultation, but you cannot see anyone else as attending, there may be an issue with the invite link used or their connection to the platform.<br><br>To resolve this, please place the call on hold by selecting "Leave Room" then re-start the call. This should re-trigger the patient's connection attempt.<br><br>If this does not work, please ask your patient to attempt re-joining via their <b>original invite link</b>, or alternatively you can reshare the link in-platform by pressing the "Invite" icon on the desired waiting room.`,textCy:`Gyda phob Ymgynghoriad Fideo Hywel Dda, byddwch chi fel darparwr y gwasanaeth yn ymuno â'r alwad <b>cyn</b> i'r claf symud ymlaen. Os yw'r claf wedi rhoi gwybod ei fod wedi ymuno â'r ymgynghoriad, ond na allwch weld unrhyw un arall yn bresennol, efallai bod problem gyda'r ddolen wahoddiad a ddefnyddiwyd neu gyda'i gysylltiad â'r platfform.<br><br>I ddatrys hyn, rhowch yr alwad ar wyliadwriaeth drwy ddewis "Leave Room", ac yna ailgychwyn yr alwad. Dylai hyn ail-danio ymgais y claf i gysylltu.<br><br>Os nad yw hyn yn gweithio, gofynnwch i'r claf geisio ail-ymuno drwy ei <b>ddolen wahoddiad wreiddiol</b>, neu fel arall gallwch ailrannu'r ddolen o fewn y platfform drwy bwyso'r eicon "Invite" ar yr ystafell aros neu'r alwad wedi'i threfnu berthnasol.`},
+
+"C41":{type:"a",textEn:`If your patient is experiencing issues joining their video consultation, we have a caller information leaflet with visual guides available on our <a href="https://pdflink.to/hywelddapatienten/" target="_blank" rel="noopener">Resource Centre</a><br><br>Alternatively, if they have joined the consultation but are experiencing other issues please direct them to your self-service troubleshooting available <a href="https://support.sqod.co.uk/HywelDdaPatient/" target="_blank" rel="noopener">here</a>.`,textCy:`Os yw eich claf yn cael anawsterau wrth ymuno â'i ymgynghoriad fideo, mae gennym daflen wybodaeth i alwyr gyda chanllawiau gweledol ar gael yn ein <a href="https://pdflink.to/hywelddapatienten/" target="_blank" rel="noopener">Canolfan Adnoddau</a>.<br><br>Fel arall, os yw wedi ymuno â'r ymgynghoriad ond yn profi anawsterau eraill, cyfeiriwch ef at ein teclyn datrys problemau hunanwasanaeth sydd ar gael <a href="https://support.sqod.co.uk/HywelDdaPatient/" target="_blank" rel="noopener">yma</a>.`},
+
+"C42":{type:"a",textEn:`There are four ways in which you can conduct a consultation with multiple participants.<br><br>1. <b>Creating a group call:</b> From the Waiting Room, you can select the tick box on the left side of the desired patients then press "<b>Start group call</b>" to begin a consultation with them.<br>2. <b>Add from the Waiting Room:</b> Whilst in a live consultation, you can invite a patient in the Waiting Room into the call by switching to the dashboard tab in your browser and selecting the plus icon next to the patient.<br>3. <b>Invite a 3rd party:</b> When in a live consultation, you can select the share icon on the top right to share access to that specific call. This can be done in-platform via our SMS and email invite feature, or by copying and sharing the unique link. Please note, if doing so we strongly recommend turning on the Room Lock within the call settings. This allows you to preview and approve those requesting to join the consultation, adding an additional layer of security for your patient.<br>4. <b>Clinician participation:</b> If you wish for a colleague with Hywel Dda Video Consultation access to join you on a consultation, they can do so by logging into their Hywel Dda Video Consultation account then joining the call from the correct Waiting Room, by finding the patient and selecting the handset icon.<br><br>If you are having technical difficulties with conducting <b>group calls</b>, please contact your IT Helpdesk at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`Mae pedair ffordd o gynnal ymgynghoriad â sawl cyfranogwr.<br><br>1. <b>Creu galwad grŵp:</b> O'r Ystafell Aros, gallwch dicio'r blwch ar ochr chwith y cleifion perthnasol ac yna pwyso "<b>Start group call</b>" i ddechrau ymgynghoriad gyda nhw.<br>2. <b>Ychwanegu o'r Ystafell Aros:</b> Tra byddwch mewn ymgynghoriad byw, gallwch wahodd claf o'r Ystafell Aros i mewn i'r alwad drwy newid i dab y dangosfwrdd yn eich porwr a dewis yr eicon plws wrth ymyl y claf.<br>3. <b>Gwahodd trydydd parti:</b> Pan fyddwch mewn ymgynghoriad byw, gallwch ddewis yr eicon rhannu yng nghornel dde uchaf y sgrin er mwyn rhannu mynediad i'r alwad benodol honno. Gellir gwneud hyn o fewn y platfform drwy'r nodwedd wahoddiad SMS ac e-bost, neu drwy gopïo a rhannu'r ddolen unigryw. Sylwer: os gwnewch hyn, rydym yn argymell yn gryf eich bod yn troi ymlaen y Room Lock yng ngosodiadau'r alwad. Mae hyn yn caniatáu i chi ragweld a chymeradwyo'r rhai sy'n gofyn am ymuno â'r ymgynghoriad, gan ychwanegu haen ychwanegol o ddiogelwch ar gyfer eich claf.<br>4. <b>Cyfranogiad asiant:</b> Os dymunwch i gydweithiwr sydd â mynediad i Ymgynghoriad Fideo Hywel Dda ymuno â chi mewn ymgynghoriad, gall wneud hynny drwy fewngofnodi i'w gyfrif Ymgynghoriad Fideo Hywel Dda ac yna ymuno â'r alwad o'r Ystafell Aros neu'r Alwad Wedi'i Threfnu gywir, drwy ddod o hyd i'r claf a dewis eicon y derbynydd.<br><br>Os ydych yn cael anawsterau technegol wrth gynnal <b>galwadau grŵp</b>, cysylltwch â'n Tîm Cymorth Cwsmeriaid yn <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>.`},
+
+"C2":{type:"q",textEn:`Is the issue with your own audio-visual feed, or theirs?`,textCy:`A yw'r broblem gyda'ch llif sain a fideo chi, neu eu llif nhw?`,buttons:[{label:"Mine",labelCy:"Fy rhai i",next:"C2A"},{label:"Theirs",labelCy:"Eu rhai nhw",next:"C2AA"}]},
+
+"C2A":{type:"a",textEn:`If you're experiencing issues with your microphone and camera, it may be due to the following reasons:<br><br><b>Device permissions:</b> If you're unable to turn on your microphone and camera, it may be due to your browser's device permissions. This can be managed via the lock icon on the left side of the URL bar on your web browser. If you have enabled device permissions but cannot produce any audio or visual feed at all, please check your microphone and camera are working through an online webcam tester or by recording a video within your device's camera application.<br><b>Internet connection:</b> If your microphone and camera are connected but experiencing quality issues, this may be due to your internet connectivity. You can check this via the "Meeting Diagnostics" cog in the top right of the call window, or test your connection speed at <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>.<br><b>Browser cache:</b> If you're still experiencing issues, please clear your browser cache. You can view our guide on how to do this <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">here</a>.<br><b>Restart your device:</b> If your device has been turned on for a long period, completely turning it off (as opposed to sleep mode) then turning the device back on can help to rectify any processing issues.<br><br>Alternatively, if the above solutions do not work please contact your IT Helpdesk at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`Os ydych yn profi anawsterau gyda'ch meicroffon a'ch camera, gallai hyn fod oherwydd y rhesymau canlynol:<br><br><b>Caniatadau dyfais:</b> Os na allwch droi ymlaen eich meicroffon a'ch camera, efallai bod hyn oherwydd caniatadau dyfais eich porwr. Gellir rheoli hyn drwy eicon y clo ar ochr chwith y bar URL yn eich porwr gwe. Os ydych wedi galluogi caniatadau dyfais ond na allwch gynhyrchu unrhyw lif sain na fideo o gwbl, gwiriwch fod eich meicroffon a'ch camera yn gweithio drwy ddefnyddio gwefan profi camera ar-lein, neu drwy recordio fideo o fewn ap camera eich dyfais.<br><b>Cysylltiad rhyngrwyd:</b> Os yw eich meicroffon a'ch camera wedi'u cysylltu ond yn profi problemau ansawdd, gallai hyn fod oherwydd eich cysylltedd rhyngrwyd. Gallwch wirio hyn drwy'r eicon "Meeting Diagnostics" (gêr) yng nghornel dde uchaf ffenestr yr alwad, neu brofi cyflymder eich cysylltiad yn <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>.<br><b>Storfa'r porwr:</b> Os ydych yn dal i brofi anawsterau, cliriwch storfa eich porwr. Gallwch weld ein canllaw ar sut i wneud hyn <a href="https://resources.sqod.co.uk/article/54-clearing-your-cache" target="_blank" rel="noopener">yma</a>.<br><b>Ailgychwyn eich dyfais:</b> Os yw eich dyfais wedi bod ymlaen am gyfnod hir, gall ei diffodd yn llwyr (yn hytrach na modd cysgu) ac yna ei throi'n ôl ymlaen helpu i unioni unrhyw broblemau prosesu.<br><br>Fel arall, os nad yw'r atebion uchod yn gweithio, cysylltwch â'n Tîm Cymorth Cwsmeriaid yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C2AA":{type:"a",textEn:`If you're experiencing issues with the patient's camera and microphone, first confirm whether they accepted their device permissions when the call started. If they have already done so, there's a number of solutions you can advise:<br><br>1. <b>Confirm the camera and microphone are not muted:</b> If a patient has their device muted or turned off, it will be signified on your call screen by orange mute icons next to their name. Kindly request that the patient un-mute their microphone and camera by clicking the respective device icons at the bottom of their call window.<br>2. <b>Close all other applications and tabs:</b> If the camera/microphone were previously being used by another application, closing all open windows and refreshing the browser can help to reset the device permissions.<br>3. <b>Check the internet connection:</b> If there are persistent issues with audio and camera quality, insufficient internet speed may be the issue. The patient can check their internet connection in-platform via the <b>Meeting Diagnostics</b>, signified by 3 bars in the top right corner of the consultation window, or by using an internet speed tester such as <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>. If the internet speed is insufficient or poor, please advise that they switch to an alternative network.<br>4. <b>Re-join the consultation:</b> If the above steps do not work, advise the patient to restart their device and re-join their consultation via the original <b>invite</b> link.<br><br>If you're still experiencing issues with their audio-visual feed, please advise them to attempt re-joining on another device or clearing their browser cache.<br>We have a step-by-step guide on how to do this <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">here</a>.`,textCy:`Os ydych yn profi anawsterau gyda camera a meicroffon y claf, cadarnhewch yn gyntaf a wnaeth dderbyn caniatadau'r ddyfais pan gychwynnwyd yr alwad. Os yw eisoes wedi gwneud hynny, dyma nifer o atebion y gallwch eu hawgrymu:<br><br>1. <b>Cadarnhewch nad yw'r camera na'r meicroffon wedi'u tewi:</b> Os yw claf wedi tewi ei ddyfais neu ei diffodd, bydd hyn yn cael ei nodi ar eich sgrin alwad gan eiconau tewi lliw oren wrth ymyl ei enw. Gofynnwch yn gwrtais i'r claf dad-dewi ei feicroffon a'i gamera drwy glicio'r eiconau dyfais perthnasol ar waelod ffenestr ei alwad.<br>2. <b>Caewch yr holl raglenni a thabiau eraill:</b> Os oedd y camera neu'r meicroffon yn cael eu defnyddio gan raglen arall yn flaenorol, gall cau'r holl ffenestri agored ac adnewyddu'r porwr helpu i ailosod caniatadau'r ddyfais.<br>3. <b>Gwiriwch y cysylltiad rhyngrwyd:</b> Os oes anawsterau parhaus gydag ansawdd sain neu gamera, efallai mai cyflymder rhyngrwyd annigonol yw'r achos. Gall y claf wirio ei gysylltiad rhyngrwyd o fewn y platfform drwy'r <b>Meeting Diagnostics</b> — a ddangosir gan 3 bar yng nghornel dde uchaf ffenestr yr ymgynghoriad — neu drwy ddefnyddio gwefan profi cyflymder fel <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net</a>. Os yw'r cyflymder rhyngrwyd yn annigonol neu'n wan, cynghorwch y claf i newid i rwydwaith arall.<br>4. <b>Ail-ymuno â'r ymgynghoriad:</b> Os nad yw'r camau uchod yn gweithio, cynghorwch y claf i ailgychwyn ei ddyfais ac ail-ymuno â'r ymgynghoriad drwy'r ddolen <b>wahoddiad</b> wreiddiol.<br><br>Os ydych yn dal i brofi anawsterau gyda'i lif sain a fideo, cynghorwch y claf i geisio ail-ymuno ar ddyfais arall, neu i glirio storfa ei borwr.<br>Mae gennym ganllaw cam wrth gam ar sut i wneud hyn <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">yma</a>.`},
+
+"C5":{type:"q",textEn:`What log in issue are you experiencing?`,textCy:`Pa broblem fewngofnodi yr ydych yn ei phrofi?`,buttons:[{label:"Password",labelCy:"Cyfrinair",next:"C51"},{label:"Multi-factor authentication",labelCy:"Dilysu aml-ffactor",next:"C52"}]},
+
+"C51":{type:"a",textEn:`If you are attempting to log in but the platform advises your <b>password</b> is incorrect, please select the eye icon on the password box to view your password in plaintext.<br><br>Having additional blank spaces at the start or end of the password is a common problem, especially if copying the password over from your Welcome email. To reset your password, this can be done by selecting the link on the log in page or by clicking on your name along the tab dashboard when logged in, then selecting <b>"Reset Password"</b>.<br><br>If you are still having technical difficulties with your password, please contact your IT Helpdesk at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`Os ydych yn ceisio mewngofnodi ond mae'r platfform yn nodi bod eich <b>cyfrinair</b> yn anghywir, dewiswch yr eicon llygad ar y blwch cyfrinair i'w weld fel testun plaen.<br><br>Mae cael bylchau gwag ychwanegol ar ddechrau neu ddiwedd y cyfrinair yn broblem gyffredin, yn enwedig os ydych yn copïo'r cyfrinair o'ch e-bost Croeso. I ailosod eich cyfrinair, gallwch wneud hyn drwy ddewis y ddolen ar y dudalen fewngofnodi, neu drwy glicio ar eich enw ar dangosfwrdd y tabiau pan fyddwch wedi mewngofnodi, ac yna dewis <b>"Reset Password"</b>.<br><br>Os ydych yn dal i gael anawsterau technegol gyda'ch cyfrinair, cysylltwch â'n Tîm Cymorth Cwsmeriaid yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C52":{type:"a",textEn:`A new 6 digit multi-factor authentication is required to be entered <b>each time you log in</b> to begin a session on Hywel Dda Video Consultations.<br><br>If you no longer have access to, or would like to change your original authentication device, please contact the <b>Hywel Dda IT Helpdesk</b>at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`Mae'n ofynnol nodi cod dilysu aml-ffactor 6 digid newydd <b>bob tro y byddwch yn mewngofnodi</b> er mwyn dechrau sesiwn ar Ymgynghoriadau Fideo Hywel Dda.<br><br>Os nad oes gennych fynediad mwyach i'ch dyfais ddilysu wreiddiol, neu os hoffech ei newid, cysylltwch â <b>Thabl Cymorth TG Hywel Dda</b> yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C6":{type:"a",textEn:`With in-platform SMS and email messaging, inviting patients to use your service is a quick and easy process! There's several ways in which an <b>invite</b> can be shared:<br><br><b>Waiting rooms:</b> To share the re-usable link to your waiting room, select the "Invite" icon on the desired room. You can choose to send an SMS or email invite in-platform with up to a 200 character message, or alternatively copy the link and attach it in your other communication or to your website.<br><b>Live call invite:</b> To invite a 3rd party directly into a specific live consultation, select the "Share" icon in the top right of the call window. From here you can send an invite via SMS or email, or choose to share the link directly.<br><br>If you are still having technical difficulties with service invites, please contact your IT Helpdesk at <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`,textCy:`Gyda negeseuon SMS ac e-bost o fewn y platfform, mae gwahodd cleifion i ddefnyddio eich gwasanaeth yn broses gyflym a rhwydd! Mae sawl ffordd o rannu <b>gwahoddiad</b>:<br><br><b>Ystafelloedd aros:</b> I rannu'r ddolen y gellir ei hailddefnyddio ar gyfer eich ystafell aros, dewiswch yr eicon "Invite" ar yr ystafell berthnasol. Gallwch ddewis anfon gwahoddiad SMS neu e-bost o fewn y platfform gyda neges o hyd at 200 nod, neu fel arall copïo'r ddolen a'i hatodi at eich cyfathrebiadau eraill neu at eich gwefan.<br><b>Gwahoddiad galwad fyw:</b> I wahodd trydydd parti yn uniongyrchol i ymgynghoriad byw penodol, dewiswch yr eicon "Share" yng nghornel dde uchaf ffenestr yr alwad. O'r fan hon gallwch anfon gwahoddiad drwy SMS neu e-bost, neu ddewis rhannu'r ddolen yn uniongyrchol.<br><br>Os ydych yn dal i gael anawsterau technegol gyda gwahoddiadau gwasanaeth, cysylltwch â'ch Tabl Cymorth TG yn <b><a href="mailto:helpdesk@hywelddahealthboard.freshservice.com">helpdesk@hywelddahealthboard.freshservice.com</a></b>.`},
+
+"C7":{type:"a",textEn:`If you are experiencing an issue not outlined by this guide, we have additional resources dedicated to Users, available on our <a href="https://resources.sqod.co.uk/category/4-support-guides" target="_blank" rel="noopener">Resource Centre</a>.<br><br>Alternatively, please contact our Customer Support team at <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>.<br><br>We are here to help you get the most out of your service with Hywel Dda Video Consultation.`,textCy:`Os ydych yn profi problem nad yw wedi'i hamlinellu yn y canllaw hwn, mae gennym adnoddau ychwanegol wedi'u neilltuo ar gyfer Defnyddwyr ar gael yn ein <a href="https://resources.sqod.co.uk/category/4-support-guides" target="_blank" rel="noopener">Canolfan Adnoddau</a>.<br><br>Fel arall, cysylltwch â'n Tîm Cymorth Cwsmeriaid yn <b><a href="mailto:customer.support@involve.vc">customer.support@involve.vc</a></b>.<br><br>Rydym yma i'ch helpu i gael y gorau o'ch gwasanaeth gydag Ymgynghoriad Fideo Hywel Dda.`}
+};
+
+function stripOuterQuotes(s){
+  if(!s)return s;
+  const t=s.trim();
+  if((t.startsWith('"')&&t.endsWith('"'))||(t.startsWith('\u201c')&&t.endsWith('\u201d')))return t.slice(1,-1);
+  return s;
+}
+function linkifyBracketed(s){
+  if(!s)return s;
+  s=s.replace(/\((https?:\/\/[^\s)]+)\)/gi,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  s=s.replace(/\(([a-z0-9.-]+\.[a-z]{2,}[^)]*)\)/gi,'<a href="https://$1" target="_blank" rel="noopener">$1</a>');
+  return s;
+}
+function applyLinkDirectives(s){
+  if(!s)return s;
+  let changed=true;
+  const dirRe=/\(\s*make\s+the\s+["\u201c]?([^\u201d"]+)["\u201d]?\s+a\s+hyperlink\s+(?:to|that\s+points\s+to)\s+(https?:\/\/[^\s)]+)\s*\)/i;
+  while(changed){
+    changed=false;
+    const m=s.match(dirRe);
+    if(!m)break;
+    const label=m[1];
+    const url=m[2];
+    s=s.replace(dirRe,'');
+    const esc=label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const patterns=[new RegExp('(\\b)'+esc+'(\\b)'),new RegExp('["\u201c]'+esc+'["\u201d]')];
+    let replaced=false;
+    for(let k=0;k<patterns.length;k++){
+      if(patterns[k].test(s)){
+        s=s.replace(patterns[k],function(m){
+          const text=m.replace(/^["\u201c]|["\u201d]$/g,'');
+          return '<a href="'+url+'" target="_blank" rel="noopener">'+text+'</a>';
+        });
+        replaced=true;
+        break;
+      }
+    }
+    if(!replaced)s+=' <a href="'+url+'" target="_blank" rel="noopener">'+label+'</a>';
+    changed=true;
+  }
+  return s;
+}
+function boldPrefixBeforeColonPerLine(s){
+  if(!s)return s;
+  const lines=s.split('\n');
+  const out=lines.map(line=>{
+    const m=line.match(/^(\s*(?:-|\u2013|\u2022|\d+\.)\s*)([^:\n]{2,}?)(:)(\s*.*)$/);
+    if(m)return m[1]+'<b>'+m[2]+m[3]+'</b>'+m[4];
+    return line;
+  });
+  return out.join('\n');
+}
+function formatAnswer(raw){
+  let t=raw||"";
+  t=stripOuterQuotes(t);
+  t=applyLinkDirectives(t);
+  t=linkifyBracketed(t);
+  t=boldPrefixBeforeColonPerLine(t);
+  t=t.replace(/\n\s*\n/g,"\n\n");
+  t=t.replace(/\n/g,"<br>");
+  return t;
+}
+function getSlideText(slide){
+  if(currentLang==='cy')return slide.textCy||slide.textEn||slide.text||"";
+  return slide.textEn||slide.text||slide.textCy||"";
+}
+function getButtonLabel(b){
+  if(currentLang==='cy')return b.labelCy||b.labelEn||b.label||"";
+  return b.labelEn||b.label||b.labelCy||"";
+}
+function renderSlide(id){
+  current=id;
+  const slide=SLIDES[id];
+  const content=document.getElementById("content");
+  const card=document.getElementById("card");
+  if(!slide){
+    content.innerHTML="<div style='text-align:left'>Slide not found: "+id+"</div>";
+    return;
+  }
+  card.className="card";
+  const dynamicSlides=["C6","C2A","C2AA","PA3","PA1","C32","C331","C332","C42","C7521"];
+  if(dynamicSlides.includes(id))card.classList.add("dynamic");
+  const textRaw=getSlideText(slide);
+  if(slide.type==="q"){
+    card.classList.add("question");
+    const qtext=stripOuterQuotes(textRaw||"");
+    const btns=(slide.buttons||[]).map(b=>`<button class="btn" onclick="goTo('${b.next}')">${getButtonLabel(b)}</button>`).join("");
+    content.innerHTML=`<h1>${qtext}</h1><div class="btns">${btns}</div>`;
+  }else{
+    card.classList.add("answer");
+    const html=formatAnswer(textRaw||"");
+    content.innerHTML=`<div class="answer-text">${html}</div>`;
+  }
+}
+function goTo(id){
+  history.push(current);
+  renderSlide(id);
+}
+function goBack(){
+  if(history.length)renderSlide(history.pop());
+}
+function resetGuide(){
+  history=[];
+  renderSlide(startId);
+}
+function updateLangUI(){
+  const enBtn=document.getElementById('lang-en');
+  const cyBtn=document.getElementById('lang-cy');
+  if(currentLang==='cy'){
+    enBtn.classList.remove('lang-active');
+    enBtn.setAttribute('aria-checked','false');
+    cyBtn.classList.add('lang-active');
+    cyBtn.setAttribute('aria-checked','true');
+  }else{
+    cyBtn.classList.remove('lang-active');
+    cyBtn.setAttribute('aria-checked','false');
+    enBtn.classList.add('lang-active');
+    enBtn.setAttribute('aria-checked','true');
+  }
+  document.documentElement.lang=currentLang;
+}
+document.getElementById('lang-en').addEventListener('click',()=>{
+  if(currentLang==='en')return;
+  currentLang='en';
+  updateLangUI();
+  renderSlide(current||startId);
+});
+document.getElementById('lang-cy').addEventListener('click',()=>{
+  if(currentLang==='cy')return;
+  currentLang='cy';
+  updateLangUI();
+  renderSlide(current||startId);
+});
+const startId="W1";
+updateLangUI();
+renderSlide(startId);
+</script>
+</body>
+</html>          
